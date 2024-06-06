@@ -55,44 +55,47 @@ public class Lense {
 
     public Material runRolls(){
         Random r = new Random();
-        int i = r.nextInt(100);
-        List<String> options = new ArrayList<>();
-        List<Integer> numbers = new ArrayList<>();
-        for (String s : plugin.LenseTypes.getConfig().getConfigurationSection("lenses." + lense + ".outputs").getKeys(false)){
-            Material mat = Material.matchMaterial(s);
-            if (mat == null) {
-                Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Error rolling material for " + lense + " lense. The material "
-                        + s + " either isn't inputted properly or doesn't exist! Re-rolling output!");
-                return runRolls();
-            }
-            if (i <= getBounds(s)) {
-                options.add(s);
-                numbers.add(getBounds(s));
-            }
-        }
-        if (options.size() < 1)
-            return Material.COBBLESTONE;
+        int roll = r.nextInt(100);
+        HashMap<Integer, List<Material>> rollOptions = loadRollOptions();
+        if (rollOptions.size() < 1) return Material.COBBLESTONE;
+        List<Integer> numbers = new ArrayList<>(rollOptions.keySet());
         Collections.sort(numbers);
-        List<String> rList = new ArrayList<>();
-        for (String key : options){
-            int n = getBounds(key);
-            if(numbers.get(0) == n){
-                rList.add(key);
+        for (int chance : numbers){
+            if (chance <= roll){
+                List<Material> potential = rollOptions.get(chance);
+                if (potential.isEmpty()) return Material.COBBLESTONE;
+                else if (potential.size() < 2) return potential.get(0);
+                else return potential.get(r.nextInt(potential.size()));
             }
         }
-        if (rList.size() < 1)
-            return Material.COBBLESTONE;
-        Material m = Material.matchMaterial(rList.get(r.nextInt(rList.size())));
-        return m;
+        return Material.COBBLESTONE;
+    }
+
+    private HashMap<Integer, List<Material>> loadRollOptions(){
+        HashMap<Integer, List<Material>> rollOptions = new HashMap<>();
+        Set<String> mats = plugin.LenseTypes.getConfig().getConfigurationSection("lenses." + lense +".outputs").getKeys(false);
+        for (String sMat : mats){
+            Material mat = Material.matchMaterial(sMat);
+            if (mat == null){
+                Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Error rolling material for " + lense + " lense. The material "
+                        + sMat + " either isn't inputted properly or doesn't exist! Re-rolling output!");
+                continue;
+            }
+            int chance = getBounds(sMat);
+            List<Material> options = rollOptions.getOrDefault(chance, new ArrayList<>());
+            options.add(mat);
+            rollOptions.put(chance, options);
+        }
+        return rollOptions;
     }
     public void saveLocation(Location location){
-        long l = Main.getBlockKey(location.getBlockX(), location.getBlockY(), location.getBlockZ());
-        plugin.LensStorage.getConfig().set("lenses." + lense + "." + location.getWorld().getName() + "."+l, l);
+        String sLoc = plugin.fromBLoc(location);
+        plugin.LensStorage.getConfig().set("locs." + sLoc + ".type", lense);
         plugin.LensStorage.saveConfig();
     }
     public void removeLocation(Location location){
-        long l = Main.getBlockKey(location.getBlockX(), location.getBlockY(), location.getBlockZ());
-        plugin.LensStorage.getConfig().set("lenses." + lense + "." + location.getWorld().getName() + "." + l, null);
+        String sLoc = plugin.fromBLoc(location);
+        plugin.LensStorage.getConfig().set("locs." + sLoc, null);
         plugin.LensStorage.saveConfig();
     }
     public void removeLegacyLocation(Location location){
