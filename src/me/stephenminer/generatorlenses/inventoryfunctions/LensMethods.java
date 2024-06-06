@@ -114,19 +114,19 @@ public class LensMethods {
         }
         inv.setItem(8, items.back());
         inv.setItem(1, items.changeChance(-1));
-        inv.setItem(2, items.changeChance(-5));
-        inv.setItem(3, items.changeChance(-10));
+        inv.setItem(2, items.changeChance(-10));
+        inv.setItem(3, items.changeChance(-100));
         inv.setItem(4, items.currentChance(plugin, lens, mat));
         inv.setItem(5, items.changeChance(1));
-        inv.setItem(6, items.changeChance(5));
-        inv.setItem(7, items.changeChance(10));
+        inv.setItem(6, items.changeChance(10));
+        inv.setItem(7, items.changeChance(100));
         return inv;
     }
 
     public void saveChance(Player player, Material mat, Inventory inv, int increment){
         Items items = new Items();
         int i = plugin.LenseTypes.getConfig().getInt("lenses." + lens + ".outputs." + mat.name() + ".chance");
-        int sum = increment + i;
+        int sum = Math.min(1000,increment + i);
         if (sum < 0)
             sum = 0;
         plugin.LenseTypes.getConfig().set("lenses." + lens + ".outputs." + mat.name() + ".chance", sum);

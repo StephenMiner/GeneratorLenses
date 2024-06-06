@@ -6,10 +6,10 @@ lenses:
     - '&6this part is optional'
     outputs:
       DIRT:
-        chance: 50
+        chance: 500
       SAND:
-        chance: 20
+        chance: 200
       GRAVEL:
-        chance: 30
+        chance: 100
       CLAY:
         chance: 10

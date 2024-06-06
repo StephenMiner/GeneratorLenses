@@ -66,20 +66,20 @@ public class Items {
         ItemStack item = new ItemStack(Material.EXPERIENCE_BOTTLE);
         ItemMeta meta = item.getItemMeta();
         switch (i){
+            case -100:
+                meta.setDisplayName("-100");
+                break;
             case -10:
                 meta.setDisplayName("-10");
-                break;
-            case -5:
-                meta.setDisplayName("-5");
                 break;
             case -1:
                 meta.setDisplayName("-1");
                 break;
+            case 100:
+                meta.setDisplayName("+100");
+                break;
             case 10:
                 meta.setDisplayName("+10");
-                break;
-            case 5:
-                meta.setDisplayName("+5");
                 break;
             case 1:
                 meta.setDisplayName("+1");
@@ -92,7 +92,7 @@ public class Items {
         ItemStack item = new ItemStack(Material.CLOCK);
         ItemMeta meta = item.getItemMeta();
         int i = plugin.LenseTypes.getConfig().getInt("lenses." + lens + ".outputs." + mat.name() + ".chance");
-        meta.setDisplayName(ChatColor.BLUE + "" + i + "/100 chance");
+        meta.setDisplayName(ChatColor.BLUE + "" + i + "/1000 chance");
         Bukkit.broadcastMessage("" + i);
         item.setItemMeta(meta);
         return item;

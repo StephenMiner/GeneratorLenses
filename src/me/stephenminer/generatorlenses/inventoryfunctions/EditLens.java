@@ -86,20 +86,20 @@ public class EditLens implements Listener {
                         return;
                     String name = item.getItemMeta().getDisplayName();
                     switch (name){
+                        case "-100":
+                            lm.saveChance(player, matMap.get(player.getUniqueId()), inv, -100);
+                            return;
                         case "-10":
                             lm.saveChance(player, matMap.get(player.getUniqueId()), inv, -10);
-                            return;
-                        case "-5":
-                            lm.saveChance(player, matMap.get(player.getUniqueId()), inv, -5);
                             return;
                         case "-1":
                             lm.saveChance(player, matMap.get(player.getUniqueId()), inv, -1);
                             return;
+                        case "+100":
+                            lm.saveChance(player, matMap.get(player.getUniqueId()), inv, 100);
+                            return;
                         case "+10":
                             lm.saveChance(player, matMap.get(player.getUniqueId()), inv, 10);
-                            return;
-                        case "+5":
-                            lm.saveChance(player, matMap.get(player.getUniqueId()), inv, 5);
                             return;
                         case "+1":
                             lm.saveChance(player, matMap.get(player.getUniqueId()), inv, 1);

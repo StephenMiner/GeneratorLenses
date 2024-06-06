@@ -55,13 +55,13 @@ public class Lense {
 
     public Material runRolls(){
         Random r = new Random();
-        int roll = r.nextInt(100);
+        int roll = r.nextInt(1000);
         HashMap<Integer, List<Material>> rollOptions = loadRollOptions();
         if (rollOptions.size() < 1) return Material.COBBLESTONE;
         List<Integer> numbers = new ArrayList<>(rollOptions.keySet());
         Collections.sort(numbers);
         for (int chance : numbers){
-            if (chance <= roll){
+            if (roll <= chance){
                 List<Material> potential = rollOptions.get(chance);
                 if (potential.isEmpty()) return Material.COBBLESTONE;
                 else if (potential.size() < 2) return potential.get(0);
