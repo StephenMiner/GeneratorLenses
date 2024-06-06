@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="GeneratorLenses:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/GeneratorLenses_jar</output-path>
+    <root id="archive" name="GeneratorLenses.jar">
+      <element id="module-output" name="GeneratorLenses" />
+    </root>
+  </artifact>
+</component>

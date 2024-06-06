@@ -1,0 +1,12 @@
+main: me.stephenminer.generatorlenses.Main
+author: StephenMiner(Meep)
+version: BETA
+name: GeneratorLenses
+description: Generator Lenses to customize your cobbblestone generators
+api-version: 1.13
+commands:
+  givelens:
+  reloadconfig:
+  lens:
+  createlens:
+  deletelens:

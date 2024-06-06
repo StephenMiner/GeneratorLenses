@@ -1,0 +1,15 @@
+lenses:
+  earth:
+    material: DIRT
+    item-name: '&6earth'
+    lore:
+    - '&6this part is optional'
+    outputs:
+      DIRT:
+        chance: 50
+      SAND:
+        chance: 20
+      GRAVEL:
+        chance: 30
+      CLAY:
+        chance: 10

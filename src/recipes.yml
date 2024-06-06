@@ -1,0 +1,11 @@
+recipes:
+  earth:
+    a: DIRT
+    b: SAND
+    c: DIRT
+    d: GRAVEL
+    e:
+    f: GRAVEL
+    g: DIRT
+    h: SAND
+    i: DIRT
