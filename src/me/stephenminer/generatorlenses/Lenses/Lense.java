@@ -47,7 +47,7 @@ public class Lense {
             lore.add(ChatColor.translateAlternateColorCodes('&', key));
         }
         lore.add(ChatColor.ITALIC + "GeneratorLens");
-        lore.add(ChatColor.ITALIC + "Type is " + lense);
+        lore.add(ChatColor.ITALIC + "Lens type is " + lense);
         meta.setLore(lore);
         item.setItemMeta(meta);
         return item;
@@ -91,6 +91,11 @@ public class Lense {
         plugin.LensStorage.saveConfig();
     }
     public void removeLocation(Location location){
+        long l = Main.getBlockKey(location.getBlockX(), location.getBlockY(), location.getBlockZ());
+        plugin.LensStorage.getConfig().set("lenses." + lense + "." + location.getWorld().getName() + "." + l, null);
+        plugin.LensStorage.saveConfig();
+    }
+    public void removeLegacyLocation(Location location){
         long l = Main.getBlockKey(location.getBlockX(), location.getBlockY(), location.getBlockZ());
         plugin.LensStorage.getConfig().set("lenses." + lense + "." + location.getWorld().getName() + "." + l, null);
         plugin.LensStorage.saveConfig();

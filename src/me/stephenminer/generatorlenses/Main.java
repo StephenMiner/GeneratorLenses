@@ -1,7 +1,5 @@
 package me.stephenminer.generatorlenses;
 
-import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
 import me.stephenminer.generatorlenses.Lenses.CreateLens;
 import me.stephenminer.generatorlenses.Lenses.Lense;
 import me.stephenminer.generatorlenses.Lenses.Recipe;
@@ -18,7 +16,8 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -28,6 +27,7 @@ public class Main extends JavaPlugin {
     public ConfigFiles LensStorage;
     public static String genCmd = "generatorlenses.commands";
     public static String genEdit = "generatorlenses.edit";
+
 
 
     @Override
@@ -136,7 +136,7 @@ public class Main extends JavaPlugin {
                 String name = args[1];
                 List<String> tempList = new ArrayList<>();
                 if (args.length >=4){
-                    List<String> lore = Lists.newArrayList(Splitter.on(",").split(args[3]));
+                    String[] lore = args[3].split(",");
                     for (String key : lore){
                         tempList.add(ChatColor.translateAlternateColorCodes('&', key).replace('_',' '));
                     }
@@ -200,6 +200,30 @@ public class Main extends JavaPlugin {
 
     /**
      *
+     * @param x chunk x
+     * @param z chunk z
+     * @return String format as x,z
+     */
+    public String chunkString(int x, int z){
+        return "" + x + "," + z;
+    }
+    /**
+     * @param xz array containing a chunk x,z val
+     * @return String format as x,z
+     */
+    public String chunkString(int[] xz){
+        return xz[0] + "," + xz[1];
+    }
+
+    public int[] fromChunkStr(String str){
+        String[] split = str.split(",");
+        int[] xz = new int[2];
+        xz[0] = Integer.parseInt(split[0]);
+        xz[1] = Integer.parseInt(split[1]);
+        return xz;
+    }
+    /**
+     *
      * @param loc
      * @return String fromatted as world,x,y,z,yaw,pitch
      */
@@ -242,7 +266,4 @@ public class Main extends JavaPlugin {
     }
 
 
-    public static String convertBlockKey(long key){
-        Location loc =
-    }
 }

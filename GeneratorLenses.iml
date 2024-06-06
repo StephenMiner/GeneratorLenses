@@ -19,12 +19,10 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../Spigot Jars/spigot-1.16.5.jar!/" />
+          <root url="jar://$USER_HOME$/Desktop/Servers/Paper-1.20.2/bundler/libraries/spigot-api-1.20.2-R0.1-SNAPSHOT.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES>
-          <root url="jar://$MODULE_DIR$/../Spigot Jars/spigot-1.16.5.jar!/" />
-        </SOURCES>
+        <SOURCES />
       </library>
     </orderEntry>
   </component>
