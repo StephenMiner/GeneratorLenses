@@ -3,6 +3,7 @@ package me.stephenminer.generatorlenses;
 import me.stephenminer.generatorlenses.Lenses.CreateLens;
 import me.stephenminer.generatorlenses.Lenses.Lense;
 import me.stephenminer.generatorlenses.Lenses.Recipe;
+import me.stephenminer.generatorlenses.commands.*;
 import me.stephenminer.generatorlenses.inventoryfunctions.EditLens;
 import me.stephenminer.generatorlenses.inventoryfunctions.LensMethods;
 import me.stephenminer.generatorlenses.inventoryfunctions.Recipes;
@@ -15,10 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
-
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 
 public class Main extends JavaPlugin {
@@ -37,6 +35,7 @@ public class Main extends JavaPlugin {
         this.LensStorage = new ConfigFiles(this, "lensstorage");
         registerEvents();
         registerRecipes();
+        addCommands();
     }
     @Override
     public void onDisable(){
@@ -53,140 +52,6 @@ public class Main extends JavaPlugin {
         }
     }
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (label.equalsIgnoreCase("givelens")){
-            if (!(sender instanceof Player)) {
-                sender.sendMessage(ChatColor.RED + "Sorry, but only players can use this command!");
-                return false;
-            }
-            if (args.length < 1){
-                sender.sendMessage(ChatColor.RED + "You need to specify which lens you want to give!");
-                return false;
-            }
-            Player player = (Player) sender;
-            if (!player.hasPermission(Main.genCmd + ".give"))
-                return false;
-            if (args.length == 1){
-                String lens = args[0];
-                Lense l = new Lense(this, lens);
-                if (l.checkEistence()){
-                    player.getInventory().addItem(l.buildItemStack());
-                    return true;
-                }else{
-                    player.sendMessage(ChatColor.RED + "This lens type does not exist!");
-                    return false;
-                }
-            }
-
-        }
-
-        if (label.equalsIgnoreCase("reloadconfig")){
-            if (sender instanceof Player){
-                Player p = (Player) sender;
-                if (!p.hasPermission(Main.genCmd + ".reload"))
-                    return false;
-            }
-            LensStorage.reloadConfig();
-            LenseTypes.reloadConfig();
-            Recipes.reloadConfig();
-            LensStorage.saveConfig();
-            LenseTypes.saveConfig();
-            Recipes.saveConfig();
-            sender.sendMessage("Reloaded config for GeneratorLenses!");
-            return true;
-        }
-
-        if (label.equalsIgnoreCase("lens")){
-            if (!(sender instanceof Player)){
-                sender.sendMessage(ChatColor.RED + "Sorry! Only players can run this command!");
-                return false;
-            }
-            Player player = (Player) sender;
-            if(!player.hasPermission(Main.genCmd + ".editlens")){
-                player.sendMessage(ChatColor.RED + "You do not have permission to use this command!");
-                return false;
-            }
-            if (args.length < 1){
-                player.sendMessage(ChatColor.RED + "You need to specify which lens you want to edit!");
-                return false;
-            }
-            if (!LenseTypes.getConfig().contains("lenses." + args[0])){
-                player.sendMessage(ChatColor.RED + args[0] + " isn't a lens!");
-                return false;
-            }
-            String lens = args[0];
-            LensMethods lm = new LensMethods(this, lens);
-            player.openInventory(lm.mainMenu());
-            return true;
-        }
-
-
-        if (label.equalsIgnoreCase("createlens")){
-            if (sender instanceof Player){
-                Player player = (Player) sender;
-                if (!player.hasPermission(Main.genCmd + ".editlens")){
-                    player.sendMessage(ChatColor.RED + "You do not have permission to run this command!");
-                    return false;
-                }
-            }
-            if (args.length >= 3){
-                String lens = args[0];
-                String material = args[2];
-                String name = args[1];
-                List<String> tempList = new ArrayList<>();
-                if (args.length >=4){
-                    String[] lore = args[3].split(",");
-                    for (String key : lore){
-                        tempList.add(ChatColor.translateAlternateColorCodes('&', key).replace('_',' '));
-                    }
-                }
-                if (tempList.size() < 1)
-                    tempList.add(" ");
-                if (Material.matchMaterial(material) == null){
-                    sender.sendMessage(ChatColor.RED + "Incorrect information!");
-                    sender.sendMessage(ChatColor.RED + "format is /createlens [type name] [item name] [item material name] [lore] (optional)");
-                    sender.sendMessage(ChatColor.RED + "to input lore use , for new lines and _ for spaces");
-                    return false;
-                }
-                CreateLens createLens = new CreateLens(this, lens, Material.matchMaterial(material),name, tempList);
-                sender.sendMessage(ChatColor.GREEN + "Created a new lens: " + lens);
-                return true;
-            }
-            else{
-                sender.sendMessage(ChatColor.RED + "Not enough info! You need to include a lens name, its item name, " +
-                        "and its item material, and if you want, its item lore.");
-                sender.sendMessage(ChatColor.RED + "format is /createlens [type name] [item name] [item material name] [lore] (optional)");
-                sender.sendMessage(ChatColor.RED + "to input lore use , for new lines and _ for spaces");
-                return false;
-            }
-        }
-
-        if (label.equalsIgnoreCase("deletelens")){
-            if (sender instanceof Player){
-                Player player = (Player)  sender;
-                if (!player.hasPermission(Main.genCmd + ".delete")){
-                    player.sendMessage(ChatColor.RED + "Sorry! You don't have permission to use this command");
-                    return false;
-                }
-            }
-            if (args.length < 1) {
-                sender.sendMessage(ChatColor.RED + "You need to specify which lens you want to delete, i.e.");
-                sender.sendMessage(ChatColor.RED + "/deletelens earth");
-                return false;
-            }
-            String name = args[0];
-            LensStorage.getConfig().set("lenses." + name, null);
-            LensStorage.saveConfig();
-            LenseTypes.getConfig().set("lenses." + name, null);
-            LenseTypes.saveConfig();
-            Recipes.getConfig().set("recipes." + name, null);
-            Recipes.saveConfig();
-            sender.sendMessage(ChatColor.GREEN + "Deleted lens "+ name);
-            return true;
-        }
-        return false;
-    }
 
 
     private void registerEvents(){
@@ -197,31 +62,28 @@ public class Main extends JavaPlugin {
         pm.registerEvents(new EditLens(this), this);
 
     }
+    private void addCommands(){
+        GiveCmd giveCmd = new GiveCmd();
+        getCommand("givelens").setExecutor(giveCmd);
+        getCommand("givelens").setTabCompleter(giveCmd);
 
-    /**
-     *
-     * @param x chunk x
-     * @param z chunk z
-     * @return String format as x,z
-     */
-    public String chunkString(int x, int z){
-        return "" + x + "," + z;
-    }
-    /**
-     * @param xz array containing a chunk x,z val
-     * @return String format as x,z
-     */
-    public String chunkString(int[] xz){
-        return xz[0] + "," + xz[1];
+        ReloadCmd reloadCmd = new ReloadCmd();
+        getCommand("reloadlens").setExecutor(reloadCmd);
+
+        LensCmd lensCmd = new LensCmd();
+        getCommand("lens").setExecutor(lensCmd);
+        getCommand("lens").setTabCompleter(lensCmd);
+
+        CreateLensCmd createLensCmd = new CreateLensCmd();
+        getCommand("createlens").setExecutor(createLensCmd);
+
+        DeleteCmd deleteCmd = new DeleteCmd();
+        getCommand("deletelens").setExecutor(deleteCmd);
+        getCommand("deletelens").setTabCompleter(deleteCmd);
+
+
     }
 
-    public int[] fromChunkStr(String str){
-        String[] split = str.split(",");
-        int[] xz = new int[2];
-        xz[0] = Integer.parseInt(split[0]);
-        xz[1] = Integer.parseInt(split[1]);
-        return xz;
-    }
     /**
      *
      * @param loc
@@ -263,6 +125,17 @@ public class Main extends JavaPlugin {
     }
     public static long getBlockKey(int x, int y, int z) {
         return (long)x & 134217727L | ((long)z & 134217727L) << 27 | (long)y << 54;
+    }
+
+
+    public List<String> filter(Collection<String> base, String match){
+        match = match.toLowerCase();
+        List<String> filtered = new ArrayList<>();
+        for (String entry : base){
+            String temp = ChatColor.stripColor(entry).toLowerCase();
+            if (temp.contains(match)) filtered.add(entry);
+        }
+        return filtered;
     }
 
 

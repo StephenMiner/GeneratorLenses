@@ -6,7 +6,7 @@ description: Generator Lenses to customize your cobbblestone generators
 api-version: 1.13
 commands:
   givelens:
-  reloadconfig:
+  reloadlens:
   lens:
   createlens:
   deletelens:
