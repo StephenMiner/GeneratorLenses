@@ -61,22 +61,14 @@ public class RecipeMethods {
     public boolean craftingSlot(int i){
         switch (i){
             case 21:
-                return true;
-            case 22:
-                return true;
-            case 23:
-                return true;
-            case 30:
-                return true;
-            case 31:
-                return true;
-            case 32:
-                return true;
-            case 39:
-                return true;
-            case 40:
-                return true;
             case 41:
+            case 22:
+            case 23:
+            case 31:
+            case 30:
+            case 32:
+            case 39:
+            case 40:
                 return true;
         }
         return false;

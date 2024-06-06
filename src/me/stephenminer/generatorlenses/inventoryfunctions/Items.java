@@ -93,7 +93,6 @@ public class Items {
         ItemMeta meta = item.getItemMeta();
         int i = plugin.LenseTypes.getConfig().getInt("lenses." + lens + ".outputs." + mat.name() + ".chance");
         meta.setDisplayName(ChatColor.BLUE + "" + i + "/1000 chance");
-        Bukkit.broadcastMessage("" + i);
         item.setItemMeta(meta);
         return item;
 
